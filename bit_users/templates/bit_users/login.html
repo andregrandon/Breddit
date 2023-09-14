@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <!-- Add your CSS stylesheets here -->
+    <!-- Add Bootstrap CSS (if needed) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">Breddit</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <!-- Add ml-auto class to move links to the right -->
+                <ul class="navbar-nav ml-auto ">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'bit_users:signup' %}">Signup</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-5  mt-4 bg-light p-4">
+        <h1>Login</h1>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br>
+
+        <button type="submit">Login</button>
+    </form>
+
+    </div>
+    <style>
+        /* Add spacing to labels and inputs */
+        label {
+            margin-bottom: 10px; /* Adjust the value as needed */
+        }
+    
+        input[type="text"],
+        input[type="password"] {
+            margin-bottom: 15px; /* Adjust the value as needed */
+        }
+    
+        /* Add spacing to the button */
+        button[type="submit"] {
+            margin-top: 15px; /* Adjust the value as needed */
+        }
+    </style>
+
+    <footer class="navbar navbar-expand-lg navbar-light bg-light fixed-bottom">
+        <div class="container d-flex justify-content-between align-items-center">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}">About Us</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'contact' %}">Contact Us</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'privacy' %}">Privacy Policy</a>
+                </li>
+                <!-- Add more links as needed -->
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.instagram.com/breddit_canada/"><i class="fab fa-instagram"></i></a>
+                </li>
+                <!-- Add more social media icons as needed -->
+            </ul>
+        </div>
+    </footer>
+    <!-- Add Bootstrap JavaScript (if needed) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+<style>
+
+    body {
+        background-image: url('/static/images/bread.jpg');
+        background-size: cover; 
+        background-position: center;
+        background-repeat: no-repeat;
+        min-height: 100vh;
+        margin: 0; /* Remove any default margin or padding */
+        padding: 0;
+    }
+    
+    
+    </style>

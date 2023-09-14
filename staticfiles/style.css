@@ -1,0 +1,5 @@
+<style>
+    .navbar-nav.ml-auto {
+        justify-content: flex-end;
+    }
+</style>
