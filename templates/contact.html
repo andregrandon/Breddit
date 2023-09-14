@@ -22,16 +22,31 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <!-- Add ml-auto class to move links to the right -->
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'bit_users:login' %}">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'bit_users:signup' %}">Signup</a>
-                    </li>
+                    {% if user.is_authenticated %}
+                        <!-- Display links for authenticated users -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'bit_posts:post-list-create' %}">Create Post</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'bit_users:logout' %}">Logout</a>
+                        </li>
+                    {% else %}
+                        <!-- Display links for non-authenticated users -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'bit_posts:post-list-create' %}">Posts</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'bit_users:login' %}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'bit_users:signup' %}">Signup</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
     </nav>
+    
     
     <div class="container mt-5 mt-4 bg-light p-4">
         <h1 style="font-family: 'Helvetica Neue', sans-serif; font-size: 36px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);">Contact Us</h1>
@@ -100,3 +115,52 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 </body>
 </html>
+<style>
+    /* Add custom styles here */
+    body {
+        background-color: #f2f2f2;
+    }
+
+    .container {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .post {
+        margin-bottom: 20px;
+        padding: 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 5px;
+        background-color: #ffffff;
+    }
+
+    .post-title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .post-content {
+        font-size: 18px;
+    }
+
+    .post-author {
+        font-size: 16px;
+        color: #777777;
+    }
+
+    .post-form {
+        margin-top: 20px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+</style>

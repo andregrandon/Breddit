@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
   
     'rest_framework',
 
@@ -144,3 +145,6 @@ EMAIL_HOST_USER = 'your-email@example.com'
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
+# In settings.py
+# Set the session timeout to 30 minutes (1800 seconds)
+SESSION_COOKIE_AGE = 1800

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta tags, title, and external styles/scripts go here -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Rest of your HTML content -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    const postForm = document.getElementById("post-form");
+    const postFormMessages = document.getElementById("post-form-messages");
+    const postListContainer = document.getElementById("post-list-container"); // Get the post list container
+
+    // Attach a click event listener to the like button
+    postListContainer.addEventListener("click", function (e) {
+        if (e.target && e.target.classList.contains("like-button")) {
+            const postId = e.target.getAttribute("data-post-id");
+
+        console.log(postId);    
+        fetch(`/bit_posts/posts/${postId}/upvote/`, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": getCookie("csrftoken"),
+                },
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+
+                const likeButton = e.target;
+                const likeCountSpan = likeButton.nextElementSibling; // Get the likes count span
+                const currentLikeCount = parseInt(likeCountSpan.textContent);
+
+                if (data.message === "Upvoted successfully.") {
+                    likeButton.innerHTML = "<i class='fas fa-thumbs-down'></i> Unlike";
+                    likeCountSpan.textContent = currentLikeCount + 1; // Increment like count
+                } else if (data.message === "Upvote removed successfully.") {
+                    likeButton.innerHTML = "<i class='fas fa-thumbs-up'></i> Like";
+                    likeCountSpan.textContent = currentLikeCount - 1; // Decrement like count
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
+        }
+    });
+
+    // Get form data
+    const formData = new FormData(postForm);
+
+    // Add an event listener to the form submission
+    postForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        // Get form data inside the event listener
+        const formData = new FormData(postForm);
+
+        // Make an AJAX POST request to the form's action attribute
+        fetch(postForm.getAttribute("action"), {
+            method: "POST",
+            body: formData,
+            headers: {
+                "X-CSRFToken": getCookie("csrftoken"), // Include CSRF token for security
+            },
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data);
+
+            postFormMessages.innerHTML = "<div class='alert alert-success'>Post created successfully.</div>";
+
+            const newPost = document.createElement("div");
+            newPost.classList.add("post");
+            newPost.innerHTML = `
+                <h2 class="post-title">${data.title}</h2>
+                <p class="post-content">${data.content}</p>
+                <p class="post-author">Author: ${data.user.username}</p>
+                <button class="like-button" data-post-id="${data.id}">
+                    <i class="fas fa-thumbs-up"></i> Like
+                </button>
+                <span class="likes-count">0</span> likes
+            `;
+            postListContainer.prepend(newPost); // Add the new post to the beginning of the list
+
+            postForm.reset();
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+
+            postFormMessages.innerHTML = "<div class='alert alert-danger'>An error occurred while creating the post.</div>";
+        });
+    });
+
+    // Function to get the CSRF token from cookies (you may need this)
+    function getCookie(name) {
+        // ...
+    }
+});
+
+</script>
+    
+
+</body>
+</html>
+
+
+
+    <style>
+        /* Add custom styles here */
+        body {
+            background-color: #f2f2f2;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .post {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            background-color: #ffffff;
+        }
+
+        .post-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .post-content {
+            font-size: 18px;
+        }
+
+        .post-author {
+            font-size: 16px;
+            color: #777777;
+        }
+
+        .post-form {
+            margin-top: 20px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">Breddit</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                {% if user.is_authenticated %}
+                <!-- Add ml-auto class to move links to the right -->
+                <ul class="navbar-nav ml-auto ">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'bit_posts:post-list-create' %}">Create Post</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'bit_users:logout' %}">Logout</a>
+                    </li>
+                </ul>
+                {% else %}
+                <ul class="navbar-nav ml-auto ">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'bit_posts:post-list-create' %}">Posts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'bit_users:login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'bit_users:signup' %}">Signup</a>
+                    </li>
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-5 mt-4" id="post-list-container">
+        <h1>Posts</h1>
+
+        <!-- Display a form for creating a new post -->
+        {% if user.is_authenticated %}
+        <div class="post-form">
+            <form method="post" action="{% url 'bit_posts:post-list-create' %}" id="post-form">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <input type="text" class="form-control" placeholder="Title" name="title" required>
+                </div>
+                <div class="mb-3">
+                    <textarea class="form-control" placeholder="Content" name="content" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Create Post</button>
+            </form>
+            <div id="post-form-messages"></div>
+        </div>
+        
+        {% endif %}
+
+        <!-- Display the list of posts -->
+ {% for post in object_list %}
+        <div class="post">
+            <h2 class="post-title">{{ post.title }}</h2>
+            <p class="post-content">{{ post.content }}</p>
+            <p class="post-author">Author: {{ post.user.username }}</p>
+            <button class="like-button" data-post-id="{{ post.id }}">
+                {% if request.user in post.upvotes.all %}<i class="fas fa-thumbs-down"></i> Unlike{% else %}<i class="fas fa-thumbs-up"></i> Like{% endif %}
+            </button>
+            <span class="likes-count">{{ post.upvotes.count }}</span> likes
+        </div>
+        {% endfor %}
+    </div>
+
+   
+
+
+    <!-- Bootstrap JavaScript (optional, if needed) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
+<style>
+
+body {
+    background-image: url('/static/images/bread.jpg');
+    background-size: cover; 
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    margin: 0; /* Remove any default margin or padding */
+    padding: 0;
+}
+    <!-- Bootstrap JavaScript and other scripts go here -->
+</body>
+
+
+</html>
