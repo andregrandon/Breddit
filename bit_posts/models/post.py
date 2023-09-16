@@ -46,3 +46,5 @@ class Post(models.Model):
         if user in self.upvotes.all():
             self.upvotes.remove(user)
             self.save()
+            
+    

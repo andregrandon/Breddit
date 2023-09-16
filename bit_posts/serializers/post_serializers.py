@@ -13,3 +13,9 @@ class PostSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['user'] = self.context['request'].user
         return super(PostSerializer, self).create(validated_data)
+    
+      
+class FindByIDSerializer(serializers.Serializer):
+    pk = serializers.IntegerField()  # Change 'post_id' to 'pk' to match the URL parameter
+
+

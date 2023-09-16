@@ -28,6 +28,9 @@
                             <a class="nav-link" href="{% url 'bit_posts:post-list-create' %}">Create Post</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="{% url 'bit_posts:find-by-id' %}">Find by ID</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="{% url 'bit_users:logout' %}">Logout</a>
                         </li>
                     {% else %}

@@ -28,6 +28,9 @@
                             <a class="nav-link" href="{% url 'bit_posts:post-list-create' %}">Create Post</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="{% url 'bit_posts:find-by-id' %}">Find by ID</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="{% url 'bit_users:logout' %}">Logout</a>
                         </li>
                     {% else %}
@@ -127,52 +130,52 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 </body>
 </html>
-<style>
-    /* Add custom styles here */
-    body {
-        background-color: #f2f2f2;
-    }
+    <style>
+        /* Add custom styles here */
+        body {
+            background-color: #f2f2f2;
+        }
 
-    .container {
-        background-color: #ffffff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-    .post {
-        margin-bottom: 20px;
-        padding: 20px;
-        border: 1px solid #e0e0e0;
-        border-radius: 5px;
-        background-color: #ffffff;
-    }
+        .post {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            background-color: #ffffff;
+        }
 
-    .post-title {
-        font-size: 24px;
-        font-weight: bold;
-        margin-bottom: 10px;
-    }
+        .post-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
 
-    .post-content {
-        font-size: 18px;
-    }
+        .post-content {
+            font-size: 18px;
+        }
 
-    .post-author {
-        font-size: 16px;
-        color: #777777;
-    }
+        .post-author {
+            font-size: 16px;
+            color: #777777;
+        }
 
-    .post-form {
-        margin-top: 20px;
-    }
+        .post-form {
+            margin-top: 20px;
+        }
 
-    .btn-primary {
-        background-color: #007bff;
-        border: none;
-    }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
 
-    .btn-primary:hover {
-        background-color: #0056b3;
-    }
-</style>
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+    </style>

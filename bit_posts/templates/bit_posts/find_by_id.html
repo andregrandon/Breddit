@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta tags, title, and external styles/scripts go here -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Rest of your HTML content -->
+    <style>
+        /* Add custom styles here */
+        body {
+            background-color: #f2f2f2;
+            background-image: url('/static/images/bread.jpg');
+            background-size: cover; 
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            margin: 0; /* Remove any default margin or padding */
+            padding: 0;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .post {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            background-color: #ffffff;
+        }
+
+        .post-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .post-content {
+            font-size: 18px;
+        }
+
+        .post-author {
+            font-size: 16px;
+            color: #777777;
+        }
+
+        .post-form {
+            margin-top: 20px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        /* Style for the additional data container */
+        .additional-data {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        /* Style for the additional data content */
+        .additional-data-content {
+            font-size: 16px;
+            color: #333;
+            /* Add more styles as needed */
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">Breddit</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                {% if user.is_authenticated %}
+                <!-- Add ml-auto class to move links to the right -->
+                <ul class="navbar-nav ml-auto ">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'bit_posts:post-list-create' %}">Create Post</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'bit_posts:find-by-id' %}">Find by ID</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'bit_users:logout' %}">Logout</a>
+                    </li>
+                </ul>
+                {% else %}
+                <ul class="navbar-nav ml-auto ">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'bit_posts:post-list-create' %}">Posts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'bit_users:login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'bit_users:signup' %}">Signup</a>
+                    </li>
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-5 mt-4">
+        <h1>Find by ID</h1>
+        <p> To find a post, enter an existing post ID, and the corresponding post will be displayed. If the entered ID does not exist, nothing will appear until you enter an existing one. <br> Exisiting ID's for example are
+         129 or 133. 
+        </p>
+
+        <!-- Display a form for finding a post by ID -->
+        <form id="find-post-form" action="{% url 'bit_posts:render-posts' %}" method="GET">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="post-id">Enter Post ID:</label>
+                <input type="text" class="form-control mb-2" id="post-id" name="post_id" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Find Post</button>
+        </form>
+
+        <!-- Display the found post (if any) -->
+        {% if post %}
+            <div class="post">
+                <h2 class="post-title">{{ post.title }}</h2>
+                <p class="post-content">{{ post.content }}</p>
+                <p class="post-author">Author: {{ post.user.username }}</p>
+                <button class="like-button" data-post-id="{{ post.id }}">
+                    {% if request.user in post.upvotes.all %}<i class="fas fa-thumbs-down"></i> Unlike{% else %}<i class="fas fa-thumbs-up"></i> Like{% endif %}
+                </button>
+                <span class="likes-count">{{ post.upvotes.count }}</span> likes
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Bootstrap JavaScript (optional, if needed) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
