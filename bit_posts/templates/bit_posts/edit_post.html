@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta tags, title, and external styles/scripts go here -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Rest of your HTML content -->
+    <style>
+        /* Add custom styles here */
+        body {
+            background-color: #f2f2f2;
+            background-image: url('/static/images/bread.jpg');
+            background-size: cover; 
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            margin: 0; /* Remove any default margin or padding */
+            padding: 0;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .post {
+            margin-bottom: 20px;
+            padding: 20px;
+            
+            border-radius: 5px;
+            background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background 0.2s ease-in-out, border 0.2s ease-in-out; /* Include border in the transition */
+        }
+        
+       
+        
+        
+
+        .post-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .post-content {
+            font-size: 18px;
+        }
+
+        .post-author {
+            font-size: 16px;
+            color: #777777;
+        }
+
+        .post-form {
+            margin-top: 20px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        /* Style for the additional data container */
+        .additional-data {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        /* Style for the additional data content */
+        .additional-data-content {
+            font-size: 16px;
+            color: #333;
+            /* Add more styles as needed */
+        }
+        .back-button-container {
+            position: absolute;
+            top: 98px;
+            left: 0px;
+            padding: 8px;
+            background-color: rgba(0, 0, 0, 0.1); /* A slightly transparent background */
+            border-radius: 50px; /* Larger border-radius for a more iOS-like appearance */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+        }
+        
+        /* Style for the back button text */
+        .back-button {
+            text-decoration: none;
+            font-size: 18px;
+            color: #007bff; /* iOS-like blue color */
+            font-weight: bold; /* Bold text for emphasis */
+        }
+        
+        /* Style for the arrow icon */
+        .back-button i {
+            margin-right: 5px; /* Add some space between the icon and text */
+            color: #007bff; /* iOS-like blue color for the arrow */
+        }
+    </style>
+</head>
+<body>
+    <div class="back-button-container">
+        <a class="back-button" href="javascript:history.back()">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">Breddit</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                {% if user.is_authenticated %}
+                <!-- Add ml-auto class to move links to the right -->
+                <ul class="navbar-nav ml-auto ">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'bit_posts:post-list-create' %}">Create Post</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'bit_posts:find-by-id' %}">Find by ID</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'bit_users:logout' %}">Logout</a>
+                    </li>
+                </ul>
+                {% else %}
+                <ul class="navbar-nav ml-auto ">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'bit_posts:post-list-create' %}">Posts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'bit_users:login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'bit_users:signup' %}">Signup</a>
+                    </li>
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-5 mt-4">
+      
+
+        <!-- Display the found post (if any) -->
+        <!-- Display the found post (if any) -->
+{% if post %}
+<div class="post">
+    <h2 class="post-title">{{ post.title }}</h2>
+    <p class="post-content">{{ post.content }}</p>
+    <p class="post-author">Author: {{ post.user.username }}</p>
+    <button class="like-button" data-post-id="{{ post.id }}">
+        {% if request.user in post.upvotes.all %}<i class="fas fa-thumbs-down"></i> Unlike{% else %}<i class="fas fa-thumbs-up"></i> Like{% endif %}
+    </button>
+    <span class="likes-count">{{ post.upvotes.count }}</span> likes
+</div>
+{% endif %}
+
+<!-- Comment input form -->
+<div class="comment-form mt-9">
+    <h1>Edit Your Breddit</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_title">Title</label>
+            <input type="text" class="form-control" id="id_title" name="title" value="{{ post.title }}">
+        </div>
+        <div class="form-group">
+            <label for="id_content">Content</label>
+            <textarea class="form-control comment-input" id="id_content" name="content" rows="5" placeholder="Re-write your post content here!">{{ post.content }}</textarea>
+        </div>
+        
+        <button class="btn btn-primary mt-2" type="submit">Save</button>
+    </form>
+</div>
+
+
+
+
+
+<!-- Error messages display -->
+{% if messages %}
+<l class="messages">
+    {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+
+
+
+    </div>
+
+    
+
+    <!-- Bootstrap JavaScript (optional, if needed) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <style>
+        /* Existing styles */
+    
+        /* Style for comments section */
+        .comments-section {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            background-color:  #e0e0e0;
+        }
+    
+        .comment {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, border-color 0.2s ease-in-out;
+        }
+        
+        .comment:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-color: #007bff; /* Dark blue border on hover */
+        }
+        
+    
+        /* Style for comment header (author and timestamp) */
+        .comment-header {
+            font-size: 14px;
+            color: #777;
+            font-family: Arial, sans-serif; /* Change the font family */
+        }
+    
+        /* Style for comment content */
+        .comment-content {
+            font-size: 16px; /* Adjust the font size for the main comment content */
+        }
+        
+        
+        .editing {
+            background-color: #ffffcc; /* Change the background color for editing mode */
+        }
+        
+    
+        /* Style for comment actions (e.g., reply) */
+        .comment-actions {
+            font-size: 12px;
+            color: #007bff;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+    
+        /* Style for replies to comments */
+        .reply {
+            margin-left: 20px;
+            border-left: 2px solid #007bff;
+            padding-left: 10px;
+        }
+        /* Style for the comment input form */
+.comment-form {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for the comment input textarea */
+.comment-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    transition: border-color 0.2s ease-in-out;
+}
+
+/* Style for the comment input textarea on focus */
+.comment-input:focus {
+    border-color: #007bff; /* Change the border color on focus */
+    outline: none; /* Remove the default focus outline */
+}
+
+/* Style for the submit button */
+.comment-submit-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+/* Style for the submit button on hover */
+.comment-submit-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+/* Style for the comment input form */
+.comment-form {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s ease-in-out; /* Add a transition effect for background-color */
+}
+
+/* Hover effect for the comment input form */
+.comment-form:hover {
+    background-color: #e0e0e0; /* Change the background color on hover */
+}
+
+/* Style for the comment input textarea */
+.comment-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    transition: border-color 0.2s ease-in-out;
+}
+
+/* Style for the comment input textarea on focus */
+.comment-input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.comment-timestamp {
+    font-size: 12px; /* Adjust the font size */
+    color: #777; /* Adjust the color */
+    float: right; /* Align to the right */
+    margin-left: 10px; /* Add some space between date and author */
+    margin-top: 85px;
+}
+
+/* Style for the submit button */
+.comment-submit-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+/* Style for the submit button on hover */
+.comment-submit-button:hover {
+    background-color: #0056b3;
+}
+
+/* Style for the Edit button with blue color */
+
+/* Style for the Edit button with blue color */
+/* Style for the Edit button with white bubble and subtle border */
+.edit-comment-button {
+    background-color: #fff !important;
+    border: 1px solid #ccc !important;
+    color: #000 !important; /* Black text color */
+    padding: 2px 3px !important;
+    border-radius: 5px !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.2s ease-in-out !important;
+}
+
+/* Style for the Edit button on hover (back to blue with white text) */
+.edit-comment-button:hover {
+    background-color: #007bff !important;
+    border: 1px solid #007bff !important;
+    color: #fff !important; /* White text color */
+}
+
+/* Style for the Delete button with white bubble and subtle border */
+.delete-comment-button {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    color: #000; /* Black text color */
+    padding: 2px 3px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+/* Style for the Delete button on hover (back to red with white text) */
+.delete-comment-button:hover {
+    background-color: #dc3545;
+    border: 1px solid #dc3545;
+    color: #fff; /* White text color */
+}
+.alert {
+    color: green;
+    /* Add more CSS properties as needed */
+
+
+    </style>
+    
+    
+    
+        
+        
+    
+ 
+    <!-- Add this script block to your HTML page -->
+
+</body>
+</html>

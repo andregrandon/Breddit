@@ -16,6 +16,9 @@ class PostSerializer(serializers.ModelSerializer):
     
       
 class FindByIDSerializer(serializers.Serializer):
-    pk = serializers.IntegerField()  # Change 'post_id' to 'pk' to match the URL parameter
+    pk = serializers.IntegerField()  
 
-
+class UpvoteResponseSerializer(serializers.Serializer):
+    message = serializers.CharField()
+    liked = serializers.BooleanField()
+    new_like_count = serializers.IntegerField()

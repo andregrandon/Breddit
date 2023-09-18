@@ -43,6 +43,21 @@
         .post-content {
             font-size: 18px;
         }
+        .post-form {
+            margin-top: 0px;
+            padding: 50px;
+            border: 8px solid #e0e0e0;
+            border-radius: 5px;
+            background: linear-gradient(to bottom, #d0d0d0, #c0c0c0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.2s ease-in-out; /* Add a transition effect for background-color */
+        }
+        
+        .post-form:hover {
+            background: linear-gradient(to bottom, #a0a0a0, #808080); /* Darker gradient colors on hover */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Larger and darker box-shadow on hover */
+        }
+        
 
         .post-author {
             font-size: 16px;
@@ -52,6 +67,11 @@
         .post-form {
             margin-top: 20px;
         }
+
+        #find-post-form {
+            margin-top: 10px;
+        }
+
 
         .btn-primary {
             background-color: #007bff;
@@ -77,9 +97,37 @@
             color: #333;
             /* Add more styles as needed */
         }
+        .back-button-container {
+            position: absolute;
+            top: 98px;
+            left: 0px;
+            padding: 8px;
+            background-color: rgba(0, 0, 0, 0.1); /* A slightly transparent background */
+            border-radius: 50px; /* Larger border-radius for a more iOS-like appearance */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+        }
+        
+        /* Style for the back button text */
+        .back-button {
+            text-decoration: none;
+            font-size: 18px;
+            color: #007bff; /* iOS-like blue color */
+            font-weight: bold; /* Bold text for emphasis */
+        }
+        
+        /* Style for the arrow icon */
+        .back-button i {
+            margin-right: 5px; /* Add some space between the icon and text */
+            color: #007bff; /* iOS-like blue color for the arrow */
+        }
     </style>
 </head>
 <body>
+    <div class="back-button-container">
+        <a class="back-button" href="javascript:history.back()">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+    </div>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
             <a class="navbar-brand" href="{% url 'home' %}">Breddit</a>
@@ -117,16 +165,17 @@
         </div>
     </nav>
     <div class="container mt-5 mt-4">
-        <h1>Find by ID</h1>
-        <p> To find a post, enter an existing post ID, and the corresponding post will be displayed. If the entered ID does not exist, nothing will appear until you enter an existing one. <br> Exisiting ID's for example are
-         129 or 133. 
-        </p>
+        <div class='post-form'><h1>Find by ID</h1>
+            <p> To find a post, enter an existing post ID, and the corresponding post will be displayed. If the entered ID does not exist, nothing will appear until you enter an existing one. <br> Exisiting ID's for example are
+             129 or 133. 
+            </p> </div>
+        
 
         <!-- Display a form for finding a post by ID -->
         <form id="find-post-form" action="{% url 'bit_posts:render-posts' %}" method="GET">
             {% csrf_token %}
             <div class="form-group">
-                <label for="post-id">Enter Post ID:</label>
+                <label for="post-id"><strong>Enter Post ID:</strong></label>
                 <input type="text" class="form-control mb-2" id="post-id" name="post_id" required>
             </div>
             <button type="submit" class="btn btn-primary">Find Post</button>

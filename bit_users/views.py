@@ -3,19 +3,9 @@ from django.urls import reverse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout
 from django.views import View
-from django.http import JsonResponse
-from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
-from rest_framework.authtoken.models import Token
-from django.contrib.auth import get_user_model
 from .forms import CustomUserCreationForm
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm  
-
-# Your view functions here
-
 
 
 def signup(request):

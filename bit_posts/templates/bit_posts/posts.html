@@ -9,97 +9,64 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-    const postForm = document.getElementById("post-form");
-    const postFormMessages = document.getElementById("post-form-messages");
-    const postListContainer = document.getElementById("post-list-container"); // Get the post list container
-
-    // Attach a click event listener to the like button
-    postListContainer.addEventListener("click", function (e) {
-        if (e.target && e.target.classList.contains("like-button")) {
-            const postId = e.target.getAttribute("data-post-id");
-
-        console.log(postId);    
-        fetch(`/bit_posts/posts/${postId}/upvote/`, {
-                method: "POST",
-                headers: {
-                    "X-CSRFToken": getCookie("csrftoken"),
-                },
-            })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(data);
-
-                const likeButton = e.target;
-                const likeCountSpan = likeButton.nextElementSibling; // Get the likes count span
-                const currentLikeCount = parseInt(likeCountSpan.textContent);
-
-                if (data.message === "Upvoted successfully.") {
-                    likeButton.innerHTML = "<i class='fas fa-thumbs-down'></i> Unlike";
-                    likeCountSpan.textContent = currentLikeCount + 1; // Increment like count
-                } else if (data.message === "Upvote removed successfully.") {
-                    likeButton.innerHTML = "<i class='fas fa-thumbs-up'></i> Like";
-                    likeCountSpan.textContent = currentLikeCount - 1; // Decrement like count
-                }
-            })
-            .catch((error) => {
-                console.error("Error:", error);
+            const postForm = document.getElementById("post-form");
+            const postFormMessages = document.getElementById("post-form-messages");
+            const postListContainer = document.getElementById("post-list-container"); // Get the post list container
+    
+            // Get form data
+            const formData = new FormData(postForm);
+    
+            // Add an event listener to the form submission
+            postForm.addEventListener("submit", function (e) {
+                e.preventDefault();
+    
+                // Get form data inside the event listener
+                const formData = new FormData(postForm);
+    
+                // Make an AJAX POST request to the form's action attribute
+                fetch(postForm.getAttribute("action"), {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        "X-CSRFToken": getCookie("csrftoken"), // Include CSRF token for security
+                    },
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        console.log(data);
+    
+                        postFormMessages.innerHTML = "<div class='alert alert-success'>Post created successfully.</div>";
+    
+                        const newPost = document.createElement("div");
+                        newPost.classList.add("post");
+                        newPost.innerHTML = `
+                            <h2 class="post-title">${data.title}</h2>
+                            <p class="post-content">${data.content}</p>
+                            <p class="post-author">Author: ${data.user.username}</p>
+                            <button class="like-button" data-post-id="${data.id}">
+                                <i class="fas fa-thumbs-up"></i> Like
+                            </button>
+                            <span class="likes-count">0</span> likes
+                        `;
+                        postListContainer.prepend(newPost); // Add the new post to the beginning of the list
+    
+                        postForm.reset();
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+    
+                        postFormMessages.innerHTML = "<div class='alert alert-danger'>An error occurred while creating the post.</div>";
+                    });
             });
-        }
-    });
-
-    // Get form data
-    const formData = new FormData(postForm);
-
-    // Add an event listener to the form submission
-    postForm.addEventListener("submit", function (e) {
-        e.preventDefault();
-
-        // Get form data inside the event listener
-        const formData = new FormData(postForm);
-
-        // Make an AJAX POST request to the form's action attribute
-        fetch(postForm.getAttribute("action"), {
-            method: "POST",
-            body: formData,
-            headers: {
-                "X-CSRFToken": getCookie("csrftoken"), // Include CSRF token for security
-            },
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            console.log(data);
-
-            postFormMessages.innerHTML = "<div class='alert alert-success'>Post created successfully.</div>";
-
-            const newPost = document.createElement("div");
-            newPost.classList.add("post");
-            newPost.innerHTML = `
-                <h2 class="post-title">${data.title}</h2>
-                <p class="post-content">${data.content}</p>
-                <p class="post-author">Author: ${data.user.username}</p>
-                <button class="like-button" data-post-id="${data.id}">
-                    <i class="fas fa-thumbs-up"></i> Like
-                </button>
-                <span class="likes-count">0</span> likes
-            `;
-            postListContainer.prepend(newPost); // Add the new post to the beginning of the list
-
-            postForm.reset();
-        })
-        .catch((error) => {
-            console.error("Error:", error);
-
-            postFormMessages.innerHTML = "<div class='alert alert-danger'>An error occurred while creating the post.</div>";
+    
+            // Function to get the CSRF token from cookies (you may need this)
+            function getCookie(name) {
+                // ...
+            }
         });
-    });
-
-    // Function to get the CSRF token from cookies (you may need this)
-    function getCookie(name) {
-        // ...
-    }
-});
-
-</script>
+    </script>
+    
+    
     
 
 </body>
@@ -125,7 +92,9 @@
             padding: 20px;
             border: 1px solid #e0e0e0;
             border-radius: 5px;
-            background-color: #ffffff;
+            background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background 0.2s ease-in-out, border 0.2s ease-in-out; /* Include border in the transition */
         }
 
         .post-title {
@@ -203,10 +172,10 @@
             <form method="post" action="{% url 'bit_posts:post-list-create' %}" id="post-form">
                 {% csrf_token %}
                 <div class="mb-3">
-                    <input type="text" class="form-control" placeholder="Title" name="title" required>
+                    <input type="text" class="form-control" placeholder="Give your Breddit a catchy title!" name="title" required>
                 </div>
                 <div class="mb-3">
-                    <textarea class="form-control" placeholder="Content" name="content" rows="4" required></textarea>
+                    <textarea class="form-control" placeholder="Share your Breddits!" name="content" rows="4" required></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">Create Post</button>
             </form>
@@ -215,25 +184,94 @@
         
         {% endif %}
 
+
+
+        <ul class="nav nav-tabs" id="post-filter-tabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link {% if not filter_type or filter_type == 'recent' %}{% endif %}" href="?filter=recent">Fresh</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link {% if filter_type == 'likes' %}{% endif %}" href="?filter=likes">Hot</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link {% if filter_type == 'comments' %}{% endif %}" href="?filter=comments">Trending</a>
+            </li>
+        </ul>
+        
+        
+
+        
+        
+
         <!-- Display the list of posts -->
- {% for post in object_list %}
-        <div class="post">
-            <h2 class="post-title">{{ post.title }}</h2>
-            <p class="post-content">{{ post.content }}</p>
-            <p class="post-author">Author: {{ post.user.username }}</p>
-            <button class="like-button" data-post-id="{{ post.id }}">
-                {% if request.user in post.upvotes.all %}<i class="fas fa-thumbs-down"></i> Unlike{% else %}<i class="fas fa-thumbs-up"></i> Like{% endif %}
-            </button>
-            <span class="likes-count">{{ post.upvotes.count }}</span> likes
-        </div>
-        {% endfor %}
+        {% for post in object_list %}
+<div class="post">
+    <p class="post-author">Author: {{ post.user.username }}</p>
+    <h3 class="post-title" style="text-decoration: underline;">{{ post.title }}</h3>
+    <p class="post-content">{{ post.content }}</p>
+
+    <!-- Edit and Delete buttons (small size) -->
+    {% if user.is_authenticated and post.user == user %}
+    <div class="btn-group" style="margin-bottom: 10px;">
+        <a href="{% url 'bit_posts:update-post' post.id %}" class="btn btn-primary btn-sm edit-post-button">Edit</a>
+        <form method="post" action="{% url 'bit_posts:delete-post' post.id %}" onsubmit="return confirm('Are you sure you want to delete this post?');">
+            {% csrf_token %}
+            <button class="btn btn-danger btn-sm delete-post-button" type="submit">Delete</button>
+        </form>
     </div>
+    {% endif %}
+
+    <!-- Custom-style button for Like -->
+    <div class="custom-button" style="margin-left: 6px;">
+        {% if user.is_authenticated %}
+        <form action="{% url 'bit_posts:upvote-post' post.id %}" method="post">
+            {% csrf_token %} 
+            <button type="submit" class="like-button">
+                {% if request.user in post.upvotes.all %}
+                    <i class="fas fa-thumbs-down"></i> Unlike
+                {% else %}
+                    <i class="fas fa-thumbs-up"></i> Like
+                {% endif %}
+            </button>
+            <span class="likes-count" id="like-count-{{ post.id }}">{{ post.upvotes.count }}</span> likes
+        </form>
+        {% else %}
+        <a href="{% url 'bit_users:signup' %}" style="text-decoration: none; color: inherit;">
+            <i class="fas fa-thumbs-up"></i> Like
+        </a>
+        <span class="likes-count" id="like-count-{{ post.id }}">{{ post.upvotes.count }}</span> likes
+        {% endif %}
+    </div>
+
+    <!-- Custom-style button for Add Comment -->
+    <div class="custom-button" style="margin-top: 10px;"> <!-- Adjust margin for spacing -->
+        <a href="{% url 'bit_posts:create-comment' post_id=post.id %}" class="comment-link">
+            <i class="fas fa-comment"></i> 
+            <span class="comment-text">
+                Add a comment...{% if post.comments.count %} {{ post.comments.count }} comments{% endif %}
+            </span>
+        </a>
+    </div>
+    <p class="post-datetime">{{ post.created_at|date:"F j, Y g:i A" }}</p>
+</div>
+{% endfor %}
+
+
+
+       
+    
 
    
 
 
     <!-- Bootstrap JavaScript (optional, if needed) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <!-- Rest of your HTML content -->
+
+    
+
+
+    
 </body>
 </html>
 <style>
@@ -250,5 +288,49 @@ body {
     <!-- Bootstrap JavaScript and other scripts go here -->
 </body>
 
+.custom-button {
+    display: inline-flex;
+    align-items: center;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.comment-link .comment-text:hover {
+    color: #0056b3; /* Change text color on hover */
+    /* Optionally, you can also change the background color here */
+    background-color: #f0f0f0; /* Light grey */
+}
+
+.comment-link {
+    display: inline-flex;
+    align-items: center;
+    color: #007bff;
+    text-decoration: none;
+    margin-left: 10px; /* Add some spacing between the button and the link */
+}
+
+.comment-link:hover {
+    color: #0056b3;
+}
+
+.post-form {
+    margin-top: 20px;
+    padding: 20px;
+    border: 3px solid #e0e0e0;
+    border-radius: 5px;
+    background: linear-gradient(to bottom, #d0d0d0, #c0c0c0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s ease-in-out; /* Add a transition effect for background-color */
+}
+
+.post-form:hover {
+    background: linear-gradient(to bottom, #a0a0a0, #808080); /* Darker gradient colors on hover */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Larger and darker box-shadow on hover */
+}
 
 </html>
