@@ -47,6 +47,8 @@ class Post(models.Model):
             self.upvotes.remove(user)
             self.save()
             
+            
+            
 #model for comments
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
@@ -54,6 +56,53 @@ class Comment(models.Model):
     text = models.TextField()
     parent_comment = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+    is_reply = models.BooleanField(default=False)
+    
+    upvotes = models.ManyToManyField(
+        get_user_model(),
+        related_name='upvoted_comments',
+        blank=True,
+    )
+
+    def upvote(self, user):
+        """
+        Upvote the comment by a user.
+        """
+        if user not in self.upvotes.all():
+            self.upvotes.add(user)
+            self.save()
+
+    def remove_upvote(self, user):
+        """
+        Remove upvote from the comment by a user.
+        """
+        if user in self.upvotes.all():
+            self.upvotes.remove(user)
+            self.save()
 
     def __str__(self):
         return f"Comment by {self.user.username} on {self.post.title}"
+    
+    
+    
+#nested sub comments/replys for comments
+class SubComment(models.Model):
+    parent_comment = models.ForeignKey(
+        'Comment',
+        on_delete=models.CASCADE,
+        related_name='subcomments',
+    )
+    
+    user = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.CASCADE,
+    )
+
+    text = models.TextField(_('Text'))
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    is_reply = models.BooleanField(default=True)  
+
+    def __str__(self):
+        return f"SubComment by {self.user.username} on {self.parent_comment.post.title}"

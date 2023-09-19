@@ -52,6 +52,8 @@ INSTALLED_APPS = [
     'bit_posts.apps.BitPostsConfig',
 ]
 
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     
@@ -86,7 +88,7 @@ WSGI_APPLICATION = 'breddit_django.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',

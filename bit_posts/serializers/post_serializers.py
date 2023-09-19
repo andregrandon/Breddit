@@ -14,9 +14,10 @@ class PostSerializer(serializers.ModelSerializer):
         validated_data['user'] = self.context['request'].user
         return super(PostSerializer, self).create(validated_data)
     
-      
+
 class FindByIDSerializer(serializers.Serializer):
     pk = serializers.IntegerField()  
+
 
 class UpvoteResponseSerializer(serializers.Serializer):
     message = serializers.CharField()

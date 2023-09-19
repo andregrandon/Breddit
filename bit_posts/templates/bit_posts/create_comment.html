@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Meta tags, title, and external styles/scripts go here -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Rest of your HTML content -->
     <style>
         /* Add custom styles here */
         body {
@@ -109,7 +107,7 @@
 </head>
 <body>
     <div class="back-button-container">
-        <a class="back-button" href="javascript:history.back()">
+        <a class="back-button" href="{% url 'bit_posts:post-list-create' %}">
             <i class="fas fa-arrow-left"></i> Back
         </a>
     </div>
@@ -199,7 +197,6 @@
 <p style="margin-left: 17px;"> These are comments for breddit ID {{ post_id }}</p>
 
 <!-- Display top-level comments -->
-<!-- Display top-level comments -->
 <div class="comments-section">
     {% for comment in comments %}
     <div class="comment">
@@ -219,16 +216,25 @@
                 <!-- Delete Button for Top-Level Comment (small size) -->
                 <form method="post" action="{% url 'bit_posts:delete-comment' comment.id %}">
                     {% csrf_token %}
-                    <button class="btn btn-danger btn-sm delete-comment-button" onclick="confirmDelete({{ comment.id }})" type="submit">Delete</button>
+                    <button class="btn btn-danger btn-sm delete-comment-button" type="submit">Delete</button>
                 </form>
             </div>
             {% endif %}
-            <span class="comment-reply-action">Reply</span>
         </div>
+        
+
+        <!-- Display Reply Button for each comment -->
+        <button class="open-close-replies-button" style="margin-right: 418px;">
+            <i class="fas fa-chevron-down"></i> Open Replies
+        </button>
+        <a href="{% url 'bit_posts:reply-comment' comment.id %}" class="comment-reply-action" style="margin-right: 500px;">
+            <i class="fas fa-reply"></i> Reply To Comment
+        </a>
+        
 
         <!-- Display replies to this comment if any -->
-        <ul class="replies">
-            {% for reply in comment.comment_set.all %}
+        <ul class="replies" style="display:none;">
+            {% for reply in comment.subcomments.all|dictsortreversed:"created_at" %}
             <li class="reply">
                 <div class="comment-header">
                     <span class="comment-author">{{ reply.user.username }}</span>
@@ -241,16 +247,15 @@
                     {% if reply.user == request.user %}
                     <div style="display: flex; align-items: center; justify-content: flex-start;">
                         <!-- Edit Button for Reply (small size) -->
-                        <button class="btn btn-primary btn-sm edit-comment-button" data-comment-id="{{ reply.id }}">Edit</button>
-
+                        <a class="btn btn-primary btn-sm edit-comment-button" href="{% url 'bit_posts:update-subcomment' reply.id %}">Edit</a>
+        
                         <!-- Delete Button for Reply (small size) -->
-                        <form method="post" action="{% url 'bit_posts:delete-comment' reply.id %}">
+                        <form method="post" action="{% url 'bit_posts:delete-subcomment' reply.id %}">
                             {% csrf_token %}
                             <button class="btn btn-danger btn-sm delete-comment-button" type="submit">Delete</button>
                         </form>
                     </div>
                     {% endif %}
-                    <span class="comment-reply-action">Reply</span>
                 </div>
             </li>
             {% endfor %}
@@ -258,6 +263,9 @@
     </div>
     {% endfor %}
 </div>
+
+
+
 
 
 
@@ -281,6 +289,69 @@
 
     <!-- Bootstrap JavaScript (optional, if needed) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Function to toggle the visibility of replies for a comment
+            function toggleReplies(comment) {
+                const repliesContainer = comment.querySelector(".replies");
+                const openCloseButton = comment.querySelector(".open-close-replies-button");
+                const replyCount = repliesContainer.querySelectorAll(".reply").length; // Count the replies
+    
+                if (repliesContainer.style.display === "none" || repliesContainer.style.display === "") {
+                    repliesContainer.style.display = "block";
+                    openCloseButton.textContent = `Close Replies (${replyCount})`;
+                } else {
+                    repliesContainer.style.display = "none";
+                    openCloseButton.textContent = `Open Replies (${replyCount})`;
+                }
+            }
+    
+            // Initialize the reply count for all comment sections
+            const commentSections = document.querySelectorAll(".comment");
+            commentSections.forEach(function (comment) {
+                const openCloseButton = comment.querySelector(".open-close-replies-button");
+                const repliesContainer = comment.querySelector(".replies");
+                const replyCount = repliesContainer.querySelectorAll(".reply").length; // Count the replies
+                openCloseButton.textContent = `Open Replies (${replyCount})`;
+            });
+    
+            // Attach click event listeners to all open/close buttons
+            const openCloseButtons = document.querySelectorAll(".open-close-replies-button");
+            openCloseButtons.forEach(function (openCloseButton) {
+                openCloseButton.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    const comment = openCloseButton.closest(".comment");
+                    toggleReplies(comment);
+                });
+            });
+    
+            // Attach click event listeners to the like buttons
+            const likeButtons = document.querySelectorAll(".like-button");
+            likeButtons.forEach(function (likeButton) {
+                likeButton.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    const postId = likeButton.getAttribute("data-post-id");
+    
+                    // Perform your like/unlike logic here
+                    // ...
+    
+                    // Update the UI accordingly
+                    // ...
+                });
+            });
+        });
+    </script>
+    
+    
+
+        
+
+    
+    
+    
     <style>
         /* Existing styles */
     
@@ -307,7 +378,20 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             border-color: #007bff; /* Dark blue border on hover */
         }
+        .comment-content {
+            display: flex;
+            flex-direction: column;
+        }
         
+        .comment-timestamp {
+            font-size: 12px;
+            color: #777;
+            text-align: right;
+            margin-top: 10px; /* Add space between reply text and timestamp */
+        }
+        .open-close-replies-button:hover {
+            color: #007bff; /* Change the text color to blue on hover */
+        }
     
         /* Style for comment header (author and timestamp) */
         .comment-header {
@@ -367,6 +451,7 @@
     outline: none; /* Remove the default focus outline */
 }
 
+
 /* Style for the submit button */
 .comment-submit-button {
     background-color: #007bff;
@@ -397,7 +482,18 @@
 .comment-form:hover {
     background-color: #e0e0e0; /* Change the background color on hover */
 }
-
+.reply {
+    border: 1px solid #ddd; /* Add a border around each reply */
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px; /* Add space between replies */
+    background-color: #f9f9f9; /* Light gray background color */
+}
+.replies {
+    list-style-type: none; /* Remove bullets for each reply */
+    margin-left: 20px; /* Add some margin to indent replies */
+    padding: 0; /* Remove padding to make it more compact */
+}
 /* Style for the comment input textarea */
 .comment-input {
     width: 100%;
@@ -413,6 +509,7 @@
     border-color: #007bff;
     outline: none;
 }
+
 
 
 .comment-timestamp {
@@ -454,40 +551,7 @@
 
     </style>
     
-    <script>
-        $(document).ready(function() {
-            $('#comment-form').on('submit', function(e) {
-                e.preventDefault(); // Prevent the default form submission
     
-                // Serialize the form data to JSON
-                var formData = $(this).serializeArray();
-                var jsonData = {};
-                $.each(formData, function(index, field) {
-                    jsonData[field.name] = field.value;
-                });
-    
-                // Send an AJAX POST request to the DRF view
-                $.ajax({
-                    type: 'POST',
-                    url: '{% url 'create-comment' post_id=post_id %}', // Replace with your actual URL
-                    data: JSON.stringify(jsonData),
-                    contentType: 'application/json',
-                    headers: {
-                        'X-CSRFToken': '{{ csrf_token }}',
-                    },
-                    success: function(response) {
-                        // Handle the response (e.g., display the new comment)
-                        var comment = response.comment;
-                        // Add code here to update the page with the new comment
-                    },
-                    error: function(xhr, textStatus, errorThrown) {
-                        // Handle the error (e.g., display validation errors)
-                        console.error('Error creating comment:', xhr.status);
-                    }
-                });
-            });
-        });
-    </script>
 
     <!-- Rest of your HTML content -->
 
@@ -547,6 +611,7 @@
         }
     });
     </script>
+    
     
 
     

@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,11 +8,12 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Sign Up</title>
-    <!-- Add your CSS stylesheets here -->
-    <!-- Add Bootstrap CSS (if needed) -->
+
+    <link rel="stylesheet" type="text/css" href="{% static 'breddit/css/bit_users/style.css' %}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
@@ -47,6 +49,7 @@
         </div>
     </nav>
     
+    <!-- Login Div -->
     <div class="container mt-5 mt-4 bg-light p-4">
         <h1>Login</h1>
         {% if user.is_authenticated %}
@@ -73,23 +76,7 @@
         {% endif %}
     </div>
     
-    <style>
-        /* Add spacing to labels and inputs */
-        label {
-            margin-bottom: 10px; /* Adjust the value as needed */
-        }
-    
-        input[type="text"],
-        input[type="password"] {
-            margin-bottom: 15px; /* Adjust the value as needed */
-        }
-    
-        /* Add spacing to the button */
-        button[type="submit"] {
-            margin-top: 15px; /* Adjust the value as needed */
-        }
-    </style>
-
+    <!-- Footer -->
     <footer class="navbar navbar-expand-lg navbar-light bg-light fixed-bottom">
         <div class="container d-flex justify-content-between align-items-center">
             <ul class="navbar-nav">
@@ -102,82 +89,19 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'privacy' %}">Privacy Policy</a>
                 </li>
-                <!-- Add more links as needed -->
             </ul>
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link" href="https://www.instagram.com/breddit_canada/"><i class="fab fa-instagram"></i></a>
                 </li>
-                <!-- Add more social media icons as needed -->
             </ul>
         </div>
     </footer>
-    <!-- Add Bootstrap JavaScript (if needed) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-</body>
+
+ </body>
 </html>
 
-<style>
 
-    body {
-        background-image: url('/static/images/bread.jpg');
-        background-size: cover; 
-        background-position: center;
-        background-repeat: no-repeat;
-        min-height: 100vh;
-        margin: 0; /* Remove any default margin or padding */
-        padding: 0;
-    }
     
     
-    </style>
-
-    <style>
-        /* Add custom styles here */
-        body {
-            background-color: #f2f2f2;
-        }
-
-        .container {
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .post {
-            margin-bottom: 20px;
-            padding: 20px;
-            border: 1px solid #e0e0e0;
-            border-radius: 5px;
-            background-color: #ffffff;
-        }
-
-        .post-title {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .post-content {
-            font-size: 18px;
-        }
-
-        .post-author {
-            font-size: 16px;
-            color: #777777;
-        }
-
-        .post-form {
-            margin-top: 20px;
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-            border: none;
-        }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    

@@ -1,0 +1,73 @@
+
+/* HOME.HTML CSS TEMPLATE*/
+body {
+    background-color: #f2f2f2;
+}
+
+.container {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.post {
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    background-color: #ffffff;
+}
+
+.post-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.post-content {
+    font-size: 18px;
+}
+
+.post-author {
+    font-size: 16px;
+    color: #777777;
+}
+
+.post-form {
+    margin-top: 20px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+
+
+
+
+
+/* PRIVACY.HTML CSS TEMPLATE */
+.container {
+    background-color:#ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    background-image: url('/static/images/bread.jpg');
+    background-size: cover; 
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    margin: 0; /* Remove any default margin or padding */
+    padding: 0;
+}
+
+

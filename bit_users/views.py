@@ -19,23 +19,29 @@ def signup(request):
         form = CustomUserCreationForm()
     return render(request, 'bit_users/signup.html', {'form': form})
 
+
+
 def login_view(request):
-    form = AuthenticationForm(request, request.POST)  # Define form outside of the if block
+    form = AuthenticationForm(request, request.POST)  
     if request.method == 'POST':
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect(reverse('bit_posts:post-list-create'))  # Redirect to post listings upon successful login
+            return redirect(reverse('bit_posts:post-list-create'))  
         else:
             messages.error(request, 'Invalid username or password. Please try again.')
             form = AuthenticationForm()
             
     return render(request, 'bit_users/login.html', {'form': form})
 
+
+
 def logout_view(request):
     logout(request)
     messages.success(request, 'You have been successfully logged out.')
-    return redirect('home')  # Redirect to the home page after logout
+    return redirect('home') 
+
+
 
 
 class HomePageView(View):

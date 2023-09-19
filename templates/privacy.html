@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us - Breddit</title>
-    <!-- Link to Bootstrap CSS -->
-    <!-- Add these links to the Bootstrap CSS and JavaScript files in your <head> section -->
-    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'breddit/css/templates/style.css' %}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
@@ -20,7 +20,6 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <!-- Add ml-auto class to move links to the right -->
                 <ul class="navbar-nav ml-auto">
                     {% if user.is_authenticated %}
                         <!-- Display links for authenticated users -->
@@ -90,92 +89,17 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'privacy' %}">Privacy Policy</a>
                 </li>
-                <!-- Add more links as needed -->
+               
             </ul>
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link" href="https://www.instagram.com/breddit_canada/"><i class="fab fa-instagram"></i></a>
                 </li>
-                <!-- Add more social media icons as needed -->
+                
             </ul>
         </div>
     </footer>
     
-    <style>
-        body {
-            background-image: url('/static/images/bread.jpg');
-            background-size: cover; 
-            background-position: center;
-            background-repeat: no-repeat;
-            min-height: 100vh;
-            margin: 0; /* Remove any default margin or padding */
-            padding: 0;
-        }
-    </style>
-
-    <!-- Inline JavaScript -->
-    <script>
-        // Initialize Bootstrap components
-        $(document).ready(function () {
-            // Initialize Bootstrap Navbar
-            $('.navbar-toggler').click(function () {
-                $('#navbarNav').toggleClass('show');
-            });
-        });
-    </script>
-
-    <!-- Bootstrap JavaScript (jQuery and Popper.js are required dependencies) -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 </body>
 </html>
-    <style>
-        /* Add custom styles here */
-        body {
-            background-color: #f2f2f2;
-        }
-
-        .container {
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .post {
-            margin-bottom: 20px;
-            padding: 20px;
-            border: 1px solid #e0e0e0;
-            border-radius: 5px;
-            background-color: #ffffff;
-        }
-
-        .post-title {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .post-content {
-            font-size: 18px;
-        }
-
-        .post-author {
-            font-size: 16px;
-            color: #777777;
-        }
-
-        .post-form {
-            margin-top: 20px;
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-            border: none;
-        }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    

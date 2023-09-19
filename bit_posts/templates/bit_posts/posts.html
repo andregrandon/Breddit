@@ -106,10 +106,22 @@
         .post-content {
             font-size: 18px;
         }
+       
 
         .post-author {
             font-size: 16px;
             color: #777777;
+        }
+        .fresh-tab:hover {
+            color: #333; /* Dark grey text color on hover for "Fresh" */
+        }
+        
+        .hot-tab:hover {
+            color: #333; /* Dark grey text color on hover for "Hot" */
+        }
+        
+        .trending-tab:hover {
+            color: #333; /* Dark grey text color on hover for "Trending" */
         }
 
         .post-form {
@@ -188,15 +200,16 @@
 
         <ul class="nav nav-tabs" id="post-filter-tabs" role="tablist">
             <li class="nav-item" role="presentation">
-                <a class="nav-link {% if not filter_type or filter_type == 'recent' %}{% endif %}" href="?filter=recent">Fresh</a>
+                <a class="nav-link fresh-tab {% if not filter_type or filter_type == 'recent' %}{% endif %}" href="?filter=recent">Fresh</a>
             </li>
             <li class="nav-item" role="presentation">
-                <a class="nav-link {% if filter_type == 'likes' %}{% endif %}" href="?filter=likes">Hot</a>
+                <a class="nav-link hot-tab {% if filter_type == 'likes' %}{% endif %}" href="?filter=likes">Hot</a>
             </li>
             <li class="nav-item" role="presentation">
-                <a class="nav-link {% if filter_type == 'comments' %}{% endif %}" href="?filter=comments">Trending</a>
+                <a class="nav-link trending-tab {% if filter_type == 'comments' %}{% endif %}" href="?filter=comments">Trending</a>
             </li>
         </ul>
+        
         
         
 

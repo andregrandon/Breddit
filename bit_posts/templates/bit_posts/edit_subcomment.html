@@ -109,7 +109,7 @@
 </head>
 <body>
     <div class="back-button-container">
-        <a class="back-button" href="{% url 'bit_posts:post-list-create' %}">
+        <a class="back-button" href="javascript:history.back()">
             <i class="fas fa-arrow-left"></i> Back
         </a>
     </div>
@@ -168,22 +168,16 @@
 
 <!-- Comment input form -->
 <div class="comment-form mt-9">
-    <h1>Edit Your Post</h1>
+    <h1>Edit Your Reply</h1>
     <form method="POST">
         {% csrf_token %}
         <div class="form-group">
-            <label for="id_title">Title</label>
-            <input type="text" class="form-control" id="id_title" name="title" value="{{ post.title }}">
-        </div>
-        <div class="form-group">
-            <label for="id_content">Content</label>
-            <textarea class="form-control comment-input" id="id_content" name="content" rows="5" placeholder="Re-write your post content here!">{{ post.content }}</textarea>
+            <textarea class="form-control comment-input" name="text" rows="5" placeholder="Re-write your reply here!"></textarea>
         </div>
         
         <button class="btn btn-primary mt-2" type="submit">Save</button>
     </form>
 </div>
-
 
 
 
