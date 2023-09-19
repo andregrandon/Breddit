@@ -1,142 +1,13 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Meta tags, title, and external styles/scripts go here -->
+    
+    <link rel="stylesheet" type="text/css" href="{% static 'breddit/css/bit_posts/style.css' %}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Rest of your HTML content -->
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const postForm = document.getElementById("post-form");
-            const postFormMessages = document.getElementById("post-form-messages");
-            const postListContainer = document.getElementById("post-list-container"); // Get the post list container
-    
-            // Get form data
-            const formData = new FormData(postForm);
-    
-            // Add an event listener to the form submission
-            postForm.addEventListener("submit", function (e) {
-                e.preventDefault();
-    
-                // Get form data inside the event listener
-                const formData = new FormData(postForm);
-    
-                // Make an AJAX POST request to the form's action attribute
-                fetch(postForm.getAttribute("action"), {
-                    method: "POST",
-                    body: formData,
-                    headers: {
-                        "X-CSRFToken": getCookie("csrftoken"), // Include CSRF token for security
-                    },
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        console.log(data);
-    
-                        postFormMessages.innerHTML = "<div class='alert alert-success'>Post created successfully.</div>";
-    
-                        const newPost = document.createElement("div");
-                        newPost.classList.add("post");
-                        newPost.innerHTML = `
-                            <h2 class="post-title">${data.title}</h2>
-                            <p class="post-content">${data.content}</p>
-                            <p class="post-author">Author: ${data.user.username}</p>
-                            <button class="like-button" data-post-id="${data.id}">
-                                <i class="fas fa-thumbs-up"></i> Like
-                            </button>
-                            <span class="likes-count">0</span> likes
-                        `;
-                        postListContainer.prepend(newPost); // Add the new post to the beginning of the list
-    
-                        postForm.reset();
-                    })
-                    .catch((error) => {
-                        console.error("Error:", error);
-    
-                        postFormMessages.innerHTML = "<div class='alert alert-danger'>An error occurred while creating the post.</div>";
-                    });
-            });
-    
-            // Function to get the CSRF token from cookies (you may need this)
-            function getCookie(name) {
-                // ...
-            }
-        });
-    </script>
-    
-    
-    
-
-</body>
-</html>
-
-
-
-    <style>
-        /* Add custom styles here */
-        body {
-            background-color: #f2f2f2;
-        }
-
-        .container {
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .post {
-            margin-bottom: 20px;
-            padding: 20px;
-            border: 1px solid #e0e0e0;
-            border-radius: 5px;
-            background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background 0.2s ease-in-out, border 0.2s ease-in-out; /* Include border in the transition */
-        }
-
-        .post-title {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .post-content {
-            font-size: 18px;
-        }
-       
-
-        .post-author {
-            font-size: 16px;
-            color: #777777;
-        }
-        .fresh-tab:hover {
-            color: #333; /* Dark grey text color on hover for "Fresh" */
-        }
-        
-        .hot-tab:hover {
-            color: #333; /* Dark grey text color on hover for "Hot" */
-        }
-        
-        .trending-tab:hover {
-            color: #333; /* Dark grey text color on hover for "Trending" */
-        }
-
-        .post-form {
-            margin-top: 20px;
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-            border: none;
-        }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
-    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -211,10 +82,7 @@
         </ul>
         
         
-        
 
-        
-        
 
         <!-- Display the list of posts -->
         {% for post in object_list %}
@@ -223,7 +91,6 @@
     <h3 class="post-title" style="text-decoration: underline;">{{ post.title }}</h3>
     <p class="post-content">{{ post.content }}</p>
 
-    <!-- Edit and Delete buttons (small size) -->
     {% if user.is_authenticated and post.user == user %}
     <div class="btn-group" style="margin-bottom: 10px;">
         <a href="{% url 'bit_posts:update-post' post.id %}" class="btn btn-primary btn-sm edit-post-button">Edit</a>
@@ -234,7 +101,6 @@
     </div>
     {% endif %}
 
-    <!-- Custom-style button for Like -->
     <div class="custom-button" style="margin-left: 6px;">
         {% if user.is_authenticated %}
         <form action="{% url 'bit_posts:upvote-post' post.id %}" method="post">
@@ -256,8 +122,7 @@
         {% endif %}
     </div>
 
-    <!-- Custom-style button for Add Comment -->
-    <div class="custom-button" style="margin-top: 10px;"> <!-- Adjust margin for spacing -->
+    <div class="custom-button" style="margin-top: 10px;"> 
         <a href="{% url 'bit_posts:create-comment' post_id=post.id %}" class="comment-link">
             <i class="fas fa-comment"></i> 
             <span class="comment-text">
@@ -269,36 +134,131 @@
 </div>
 {% endfor %}
 
-
-
-       
-    
-
-   
-
-
-    <!-- Bootstrap JavaScript (optional, if needed) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-    <!-- Rest of your HTML content -->
-
-    
-
-
-    
 </body>
+
 </html>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const postForm = document.getElementById("post-form");
+        const postFormMessages = document.getElementById("post-form-messages");
+        const postListContainer = document.getElementById("post-list-container"); 
+     
+        const formData = new FormData(postForm);
+  
+        postForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+       
+            const formData = new FormData(postForm);
+
+            fetch(postForm.getAttribute("action"), {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "X-CSRFToken": getCookie("csrftoken"), 
+                },
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log(data);
+
+                    postFormMessages.innerHTML = "<div class='alert alert-success'>Post created successfully.</div>";
+
+                    const newPost = document.createElement("div");
+                    newPost.classList.add("post");
+                    newPost.innerHTML = `
+                        <h2 class="post-title">${data.title}</h2>
+                        <p class="post-content">${data.content}</p>
+                        <p class="post-author">Author: ${data.user.username}</p>
+                        <button class="like-button" data-post-id="${data.id}">
+                            <i class="fas fa-thumbs-up"></i> Like
+                        </button>
+                        <span class="likes-count">0</span> likes
+                    `;
+                    postListContainer.prepend(newPost); 
+
+                    postForm.reset();
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+
+                    postFormMessages.innerHTML = "<div class='alert alert-danger'>An error occurred while creating the post.</div>";
+                });
+        });
+
+        function getCookie(name) {
+            
+        }
+    });
+</script>
+
 <style>
 
-body {
-    background-image: url('/static/images/bread.jpg');
-    background-size: cover; 
-    background-position: center;
-    background-repeat: no-repeat;
-    min-height: 100vh;
-    margin: 0; /* Remove any default margin or padding */
-    padding: 0;
+    body {
+       background-color: #f2f2f2;
+   }
+   
+   .container {
+       background-color: #ffffff;
+       padding: 20px;
+       border-radius: 10px;
+       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+   }
+   
+   .post {
+       margin-bottom: 20px;
+       padding: 20px;
+       border: 1px solid #e0e0e0;
+       border-radius: 5px;
+       background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+       transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background 0.2s ease-in-out, border 0.2s ease-in-out; /* Include border in the transition */
+   }
+   
+   .post-title {
+       font-size: 24px;
+       font-weight: bold;
+       margin-bottom: 10px;
+   }
+   
+   .post-content {
+       font-size: 18px;
+   }
+   
+   
+   .post-author {
+       font-size: 16px;
+       color: #777777;
+   }
+   .fresh-tab:hover {
+       color: #333; 
+   }
+   
+   .hot-tab:hover {
+       color: #333; 
+   }
+   
+   .trending-tab:hover {
+       color: #333; 
+   }
+   
+   .post-form {
+       margin-top: 20px;
+   }
+   
+   .btn-primary {
+       background-color: #007bff;
+       border: none;
+   }
+   
+   .btn-primary:hover {
+       background-color: #0056b3;
+   }
+   .post-form:hover {
+    background: linear-gradient(to bottom, #a0a0a0, #808080);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
-    <!-- Bootstrap JavaScript and other scripts go here -->
+
 </body>
 
 .custom-button {
@@ -314,9 +274,8 @@ body {
 }
 
 .comment-link .comment-text:hover {
-    color: #0056b3; /* Change text color on hover */
-    /* Optionally, you can also change the background color here */
-    background-color: #f0f0f0; /* Light grey */
+    color: #0056b3; 
+    background-color: #f0f0f0; 
 }
 
 .comment-link {
@@ -324,7 +283,7 @@ body {
     align-items: center;
     color: #007bff;
     text-decoration: none;
-    margin-left: 10px; /* Add some spacing between the button and the link */
+    margin-left: 10px; 
 }
 
 .comment-link:hover {
@@ -338,12 +297,69 @@ body {
     border-radius: 5px;
     background: linear-gradient(to bottom, #d0d0d0, #c0c0c0);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.2s ease-in-out; /* Add a transition effect for background-color */
+    transition: background-color 0.2s ease-in-out; 
+
+
+ /* Add custom styles here */
+ body {
+    background-color: #f2f2f2;
 }
 
-.post-form:hover {
-    background: linear-gradient(to bottom, #a0a0a0, #808080); /* Darker gradient colors on hover */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Larger and darker box-shadow on hover */
+.container {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-</html>
+.post {
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background 0.2s ease-in-out, border 0.2s ease-in-out; /* Include border in the transition */
+}
+
+.post-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.post-content {
+    font-size: 18px;
+}
+
+
+.post-author {
+    font-size: 16px;
+    color: #777777;
+}
+.fresh-tab:hover {
+    color: #333; /* Dark grey text color on hover for "Fresh" */
+}
+
+.hot-tab:hover {
+    color: #333; /* Dark grey text color on hover for "Hot" */
+}
+
+.trending-tab:hover {
+    color: #333; /* Dark grey text color on hover for "Trending" */
+}
+
+.post-form {
+    margin-top: 20px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+</style>

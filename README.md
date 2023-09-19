@@ -1,61 +1,63 @@
-# breddit-django
+# Breddit
 
-This is a an app, meant for testing skills of developer applying for work at Equaleyes. It's a clean Django application with only [DRF](https://www.django-rest-framework.org/) added to it.
+Breddit is a web application that allows users to post and interact with content in a Reddit-like fashion. It enables users to create posts, comment on them, and vote on their favorite content.
 
-## The task
+## Features
 
-Months ago, while eating breadsticks at our offices, we had a brilliant idea for a website. **breddit**. A website similar to [reddit](https://reddit.com), but also *completely* different. It's a way for bread lovers like ourselves to share their best bread recipes, vote on them, and discuss why garlic bread is the best.
-We quickly started a plan on how to make this project work. A huge goal of ours was to use trending technologies, so we spent months researching which frameworks to use. We landed on Django, and even though our only backend developer had only heard of it, we decided this was enough experience.
-After weeks of development, the backend was only about half way done. Then, out of nowhere, our backend guy's life completely changes - he starts a [keto diet](https://en.wikipedia.org/wiki/Ketogenic_diet)! This makes breddit against his religious beliefs, so he quits. We're left with a project half way done, but we already have our opening party planned!
+- **User Authentication**: Users can sign up, log in, and log out. Authentication is required for posting, commenting, and voting.
 
-That's where you come in. You're our only hope. Please, help us finish this project, and you'll be rewarded with a lifetime supply of breadsticks*.
+- **Create Posts**: Authenticated users can create new posts with a title and content.
 
-The opening party is next week.
+- **Commenting**: Users can comment on posts, and discussions can happen within each post.
 
-## Current state of the project
+- **Reply to Comments**: Users can reply to comments also reffered to as subcomments.
 
-Currently, **breddit** has limited functionalities. You can see a list of posts and create posts. And that's pretty much it. Since this isn't a complete application login API is missing, but you can use Basic Authentication if needed. To keep it simple it's also using SQLite by default, but some data is provided within
+- **Voting System**: Users can upvote/like or downvote/unlike posts. The number of votes is displayed, and posts can be sorted by popularity.
 
-## What needs to be added 
+- **Responsive Design**: The application is designed to work seamlessly on desktop and mobile devices.
 
-### Get a single post
+- **Filtering**: Posts can be filtered by Fresh (latest), Hot (most liked), Trending (most comments).
 
-Listing all posts is cool and all, but _sometimes_ we just want one, not all of them. Make an API that will return a single post by ID.
+## Technologies Used
 
-### Upvotes
+- Python (Django Framework): The core backend framework used to build and manage the application's server-side logic.
 
-If there are no upvotes, how will we know what is popular? You better add upovote/downvote API, so we can make sure our awesome posts dont't get lost.
+- Django REST framework: The Django REST framework was used to create APIs for serving and consuming data within the application. This technology stack allows Breddit to deliver a seamless user experience by providing real-time updates and interactions through the use of AJAX for making API calls.
 
-### Post filters
+- HTML/CSS: For creating the application's web pages and styling.
 
-We want to provide users with a few filters, which change how posts are ordered. Please add support for these filters:
+- JavaScript (AJAX for asynchronous operations): Used to implement asynchronous features such as making API calls without reloading the entire page, enabling dynamic updates.
 
-* `fresh`: last added post should be on top
-* `hot`: most upvoted post should be on top
-* `trending`: most commented post should be on top
+- Bootstrap for styling: Bootstrap is used to provide a responsive and visually appealing user interface.
 
-If you have any additional filters in mind, feel free to add them as well.
+- mySQL (or your preferred database)**: The database system used to store and manage data, including user accounts, posts, comments, and votes.
 
-### Comments
+- Deployment Platform : The chosen platform for hosting and deploying the application to make it accessible online.
 
-Let's add comments to posts to express our opinion, otherwise what's the point? Add an endpoint where we can submit comments to posts. They should be editable, and deletable as well.
 
-If you're feeling adventurous, you can add multi-level comments (comments that can be replied to).
+## Installation
 
-### A few more things
+1. Clone the repository to your local machine:
 
-If you still have time, there are a couple of other things you can do:
+   ```bash
+   git clone https://github.com/andregrandon/Breddit.git
 
-* Add a few tests, just to make sure everything works
-* Export database with fixtures
+2. cd breddit
+   python -m venv venv
+   source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+   pip install -r requirements.txt
 
-That's it. If you have time, feel free to add any additional improvements as you see fit. If you have any questions, use Google.
+3. python3 manage.py makemigrations
+   python3 manage.py migrate
 
-## How to submit
+4. python3 manage.py createsuperuser
 
-Download this repository, and finish the task. Once you're done, create a zip archive, and email it to us.
+5. python3 manage.py runserver
 
-If you have any questions, use Google. Unless it's about the API. In that case, feel free to contact us.
+6. Access the application in your web browser at http://localhost:8000/.
 
-##### Disclaimer
-\* The breadsticks are a lie. Sorry.
+
+## Usage
+
+Register a new user account or log in with the admin account created.
+Create new posts, comment on existing posts, and interact with the content.

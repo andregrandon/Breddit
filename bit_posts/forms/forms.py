@@ -7,7 +7,6 @@ class CommentForm(forms.ModelForm):
         fields = ['text']
 
 
-
 class ReplyToCommentForm(forms.ModelForm):
     class Meta:
         model = SubComment  #Child model for Comment Model

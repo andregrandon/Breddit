@@ -1,48 +1,16 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Meta tags, title, and external styles/scripts go here -->
+
+    <script src="{% static 'breddit/css/bit_posts/master.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'breddit/css/bit_posts/style.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Rest of your HTML content -->
+
     <style>
-        /* Add custom styles here */
-        body {
-            background-color: #f2f2f2;
-            background-image: url('/static/images/bread.jpg');
-            background-size: cover; 
-            background-position: center;
-            background-repeat: no-repeat;
-            min-height: 100vh;
-            margin: 0; /* Remove any default margin or padding */
-            padding: 0;
-        }
-
-        .container {
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .post {
-            margin-bottom: 20px;
-            padding: 20px;
-            border: 1px solid #e0e0e0;
-            border-radius: 5px;
-            background-color: #ffffff;
-        }
-
-        .post-title {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .post-content {
-            font-size: 18px;
-        }
         .post-form {
             margin-top: 0px;
             padding: 50px;
@@ -57,71 +25,13 @@
             background: linear-gradient(to bottom, #a0a0a0, #808080); /* Darker gradient colors on hover */
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Larger and darker box-shadow on hover */
         }
-        
-
-        .post-author {
-            font-size: 16px;
-            color: #777777;
-        }
-
-        .post-form {
-            margin-top: 20px;
-        }
 
         #find-post-form {
             margin-top: 10px;
         }
-
-
-        .btn-primary {
-            background-color: #007bff;
-            border: none;
-        }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
-
-        /* Style for the additional data container */
-        .additional-data {
-            margin-top: 20px;
-            padding: 10px;
-            border: 1px solid #e0e0e0;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-        }
-
-        /* Style for the additional data content */
-        .additional-data-content {
-            font-size: 16px;
-            color: #333;
-            /* Add more styles as needed */
-        }
-        .back-button-container {
-            position: absolute;
-            top: 98px;
-            left: 0px;
-            padding: 8px;
-            background-color: rgba(0, 0, 0, 0.1); /* A slightly transparent background */
-            border-radius: 50px; /* Larger border-radius for a more iOS-like appearance */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
-        }
-        
-        /* Style for the back button text */
-        .back-button {
-            text-decoration: none;
-            font-size: 18px;
-            color: #007bff; /* iOS-like blue color */
-            font-weight: bold; /* Bold text for emphasis */
-        }
-        
-        /* Style for the arrow icon */
-        .back-button i {
-            margin-right: 5px; /* Add some space between the icon and text */
-            color: #007bff; /* iOS-like blue color for the arrow */
-        }
     </style>
 </head>
+
 <body>
     
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -132,7 +42,6 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 {% if user.is_authenticated %}
-                <!-- Add ml-auto class to move links to the right -->
                 <ul class="navbar-nav ml-auto ">
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'bit_posts:post-list-create' %}">Create Post</a>
@@ -179,62 +88,9 @@
             <button type="button" class="btn btn-primary" id="find-post-button">Find Post</button>
         </form>
 
-        <!-- Display the found post (if any) -->
+        <!-- Display the found post -->
         <div id="post-container"></div>
     </div>
-
-    <!-- Bootstrap JavaScript (optional, if needed) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-
-    <!-- Add this JavaScript code -->
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const findPostButton = document.getElementById("find-post-button");
-            const postContainer = document.getElementById("post-container");
-    
-            findPostButton.addEventListener("click", function () {
-                const postId = document.getElementById("post-id").value;
-                const apiUrl = document.getElementById("find-post-form").getAttribute("data-url");  // Get the API URL
-    
-                // Make a POST request to the API endpoint
-                fetch(apiUrl, {  // Use the retrieved API URL
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRFToken": getCookie("csrftoken"), // Include CSRF token
-                    },
-                    body: JSON.stringify({ post_id: postId }),
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        if (data.error) {
-                            postContainer.innerHTML = `<p>${data.error}</p>`;
-                        } else {
-                            // Display the retrieved post in the container
-                            postContainer.innerHTML = `
-                                <div class="post">
-                                    <h2 class="post-title">${data.title}</h2>
-                                    <p class="post-content">${data.content}</p>
-                                    <p class="post-author">Author: ${data.user.username}</p>
-                                </div>
-                            `;
-                        }
-                    })
-                    .catch((error) => {
-                        console.error(error);
-                        postContainer.innerHTML = `<p>Error fetching post data.</p>`;
-                    });
-            });
-    
-            // Function to get the CSRF token from cookies
-            function getCookie(name) {
-                const value = `; ${document.cookie}`;
-                const parts = value.split(`; ${name}=`);
-                if (parts.length === 2) return parts.pop().split(";").shift();
-            }
-        });
-    </script>
 
 </body>
 </html>
