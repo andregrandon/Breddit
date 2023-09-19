@@ -12,6 +12,8 @@
     <link rel="stylesheet" type="text/css" href="{% static 'breddit/css/bit_users/style.css' %}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 
 <body>
@@ -97,7 +99,15 @@
             </ul>
         </div>
     </footer>
-
+    <script>
+        // Initialize Bootstrap components
+        $(document).ready(function () {
+            // Initialize Bootstrap Navbar
+            $('.navbar-toggler').click(function () {
+                $('#navbarNav').toggleClass('show');
+            });
+        });
+    </script>
  </body>
 </html>
 

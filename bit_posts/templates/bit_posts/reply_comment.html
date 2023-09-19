@@ -82,6 +82,15 @@
     </form>
 </div>
 {% endif %}
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Initialize Bootstrap components
+        $(document).ready(function () {
+            // Initialize Bootstrap Navbar
+            $('.navbar-toggler').click(function () {
+                $('#navbarNav').toggleClass('show');
+            });
+        });
+    </script>
 </body>
 </html>
