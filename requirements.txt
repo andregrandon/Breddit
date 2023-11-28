@@ -25,3 +25,5 @@ sqlparse
 tornado==6.3.3
 typing_extensions 
 virtualenv==20.24.5
+[dev-packages]
+django-extensions = "*"
