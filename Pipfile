@@ -9,6 +9,7 @@ pylint = "*"
 [packages]
 django = "*"
 django-rest-framework = "*"
+django-extensions = "*"
 
 [requires]
 python_version = "3.11.5"
