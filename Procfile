@@ -1,1 +1,1 @@
-web: gunicorn breddit-django.wsgi
+web: gunicorn breddit-django.wsgi --log-file -
