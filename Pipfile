@@ -10,6 +10,7 @@ pylint = "*"
 django = "*"
 django-rest-framework = "*"
 django-extensions = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.11.5"
